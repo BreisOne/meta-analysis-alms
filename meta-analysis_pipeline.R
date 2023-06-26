@@ -19,7 +19,7 @@ colnames(ALMS1_cohort)[36] <- "SS"
 
 ALMS1_cohort <- ALMS1_cohort %>% mutate(group = as.factor(ifelse(LT < 9, 1,ifelse(LT >= 9 & LT < 14,2,3))))
 
-phenotypes <- c("VI","MT","HRT","HL","LIV","REN","RES","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
+phenotypes <- c("VI","MT","HL","HRT","LIV","REN","PUL","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
 
 
 ####Functions####
@@ -108,11 +108,11 @@ phenotype_analysis <- function(df) {
 penetrance_symptons_global <- function(update8forR){
   penetrance <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
                                phenotype_analysis(update8forR$MT)$percent,
-                               phenotype_analysis(update8forR$HRT)$percent,
                                phenotype_analysis(update8forR$HL)$percent,
+                               phenotype_analysis(update8forR$HRT)$percent,
                                phenotype_analysis(update8forR$LIV)$percent,
                                phenotype_analysis(update8forR$REN)$percent,
-                               phenotype_analysis(update8forR$RES)$percent,
+                               phenotype_analysis(update8forR$PUL)$percent,
                                phenotype_analysis(update8forR$SHS)$percent,
                                phenotype_analysis(update8forR$REP)$percent,
                                phenotype_analysis(update8forR$TYD)$percent,
@@ -132,12 +132,12 @@ penetrance_symptons_global <- function(update8forR){
 penetrance_symptons_top <- function(update8forR){
   penetrance <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
                                phenotype_analysis(update8forR$MT)$percent,
-                               phenotype_analysis(update8forR$HRT)$percent,
                                phenotype_analysis(update8forR$HL)$percent,
+                               phenotype_analysis(update8forR$HRT)$percent,
                                phenotype_analysis(update8forR$LIV)$percent
   ))
   colnames(penetrance)<- "Percent"
-  rownames(penetrance)<- c("VI","MT","HRT","HL","LIV")
+  rownames(penetrance)<- c("VI","MT","HL","HRT","LIV")
   penetrance <- penetrance %>% arrange(desc(penetrance$Percent))
   penetrance
 }
@@ -147,11 +147,11 @@ penetrance_statistics_chisq_global <- function(update8forR){
         penetrance_table = matrix(c(
           phenotype_analysis(update8forR$VI)$no,
           phenotype_analysis(update8forR$MT)$no,
-          phenotype_analysis(update8forR$HRT)$no,
           phenotype_analysis(update8forR$HL)$no,
+          phenotype_analysis(update8forR$HRT)$no,
           phenotype_analysis(update8forR$LIV)$no,
           phenotype_analysis(update8forR$REN)$no,
-          phenotype_analysis(update8forR$RES)$no,
+          phenotype_analysis(update8forR$PUL)$no,
           phenotype_analysis(update8forR$SHS)$no,
           phenotype_analysis(update8forR$REP)$no,
           phenotype_analysis(update8forR$TYD)$no,
@@ -163,11 +163,11 @@ penetrance_statistics_chisq_global <- function(update8forR){
           phenotype_analysis(update8forR$ALO)$no,
           phenotype_analysis(update8forR$VI)$yes,
           phenotype_analysis(update8forR$MT)$yes,
-          phenotype_analysis(update8forR$HRT)$yes,
           phenotype_analysis(update8forR$HL)$yes,
+          phenotype_analysis(update8forR$HRT)$yes,
           phenotype_analysis(update8forR$LIV)$yes,
           phenotype_analysis(update8forR$REN)$yes,
-          phenotype_analysis(update8forR$RES)$yes,
+          phenotype_analysis(update8forR$PUL)$yes,
           phenotype_analysis(update8forR$SHS)$yes,
           phenotype_analysis(update8forR$REP)$yes,
           phenotype_analysis(update8forR$TYD)$yes,
@@ -188,13 +188,13 @@ penetrance_statistics_chisq_top <- function(update8forR){
   penetrance_table = matrix(c(
     phenotype_analysis(update8forR$VI)$no,
     phenotype_analysis(update8forR$MT)$no,
-    phenotype_analysis(update8forR$HRT)$no,
     phenotype_analysis(update8forR$HL)$no,
+    phenotype_analysis(update8forR$HRT)$no,
     phenotype_analysis(update8forR$LIV)$no,
     phenotype_analysis(update8forR$VI)$yes,
     phenotype_analysis(update8forR$MT)$yes,
-    phenotype_analysis(update8forR$HRT)$yes,
     phenotype_analysis(update8forR$HL)$yes,
+    phenotype_analysis(update8forR$HRT)$yes,
     phenotype_analysis(update8forR$LIV)$yes
   ), ncol = 5, byrow = TRUE)
   
@@ -370,7 +370,7 @@ agregated_groups_LT <-  ggplot(ALMS1_cohort, aes(x= group, fill = Age))+
                             labs(title = "Groups by clusterised Longest trancript",
                                  x = "Group",
                                  y = "Number of patients")+
-                            scale_x_discrete(labels= c("1"="E8","2"="E10","3"="E16"))+
+                            scale_x_discrete(labels= c("1"="G1","2"="G2","3"="G3"))+
                             scale_fill_grey()+
                             theme_classic2()
   
@@ -433,14 +433,14 @@ agegroups_ss_box_plot
 save_plot(agegroups_ss_box_plot,"_Fig2_agegroups_ss_box_plot.pdf",6,6)
 dev.off()
 
-#Distribution syndromic score in subgroups (E8, E10, E16)
+#Distribution syndromic score in subgroups (G1, G2, G2)
 
 #Distribution syndromic score in subgroups
 stat.test <- compare_means(SS ~ group,  data = ALMS1_cohort, p.adjust.method ="BH")
 
 
 subgroups_ss_box_plot <- plot_syndromic_score_box(ALMS1_cohort, ALMS1_cohort$group)+
-                          scale_x_discrete(labels=c("1" = "E8", "2" = "E10", "3" = "E16"))+
+                          scale_x_discrete(labels=c("1" = "G1", "2" = "G2", "3" = "G3"))+
                                 stat_pvalue_manual(
                                   stat.test, 
                                   y.position = 1.1, step.increase = 0.1,
@@ -453,6 +453,24 @@ subgroups_ss_box_plot
 save_plot(subgroups_ss_box_plot,"_Fig2_subgroups_ss_boxplot.pdf",6,6)
 dev.off()
 
+#Correlation plot syndromic score - ages
+
+agegroups_ss_cor_plot <- ggplot(ALMS1_cohort, aes(AGE_ORIG, SS))+
+                          ggtitle("Correlation between syndromic score and age in Alström syndrome patients")+
+                          xlab("Age (Years)")+
+                          ylab("Syndromic Score")+
+                          geom_smooth(method=lm)+
+                          stat_cor(label.x = 30, label.y = 0.3)+
+                          # scale_y_continuous(limits = c(0, 1), oob = scales::squish)+
+                          # scale_x_continuous(limits = c(0, 60), oob = scales::squish)+
+                          geom_jitter()+
+                          theme_bw()
+
+agegroups_ss_cor_plot
+
+save_plot(agegroups_ss_cor_plot,"_FigS4_agegroups_ss_cor_plot.pdf",7,7)
+dev.off()
+
 #Distribution syndromic score in subgroups by ages
 
 stat.test <- ALMS1_cohort %>%
@@ -462,7 +480,7 @@ stat.test <- ALMS1_cohort %>%
 stat.test
 
 subgroups_ss_ages_box_plot <- plot_syndromic_score_box(ALMS1_cohort, ALMS1_cohort$group)+
-                                  scale_x_discrete(labels=c("1" = "E8", "2" = "E10", "3" = "E16"))+
+                                  scale_x_discrete(labels=c("1" = "G1", "2" = "G2", "3" = "G3"))+
                                   facet_grid(cols = vars(Age2))+
                                   stat_pvalue_manual(
                                     stat.test, 
@@ -476,7 +494,7 @@ subgroups_ss_ages_box_plot
 save_plot(subgroups_ss_ages_box_plot,"_Fig3_subgroups_ss_ages_boxplot.pdf",9,6)
 dev.off()
 
-#Penetrance of mains phenotypes features in subgroups (E8,E10,E16)
+#Penetrance of mains phenotypes features in subgroups (G1, G2, G2)
 
 group_exon8 <- ALMS1_cohort[ALMS1_cohort$group==1,]
 group_exon10 <- ALMS1_cohort[ALMS1_cohort$group==2,]
@@ -489,7 +507,7 @@ Phenotypes_groups <- data.frame( "Penetrance"=c(phenotype_analysis(group_exon8$V
                                                 phenotype_analysis(group_exon8$LIV)$percent,
                                                 phenotype_analysis(group_exon8$REN)$percent,
                                                 phenotype_analysis(group_exon8$MEND)$percent,
-                                                phenotype_analysis(group_exon8$RES)$percent,
+                                                phenotype_analysis(group_exon8$PUL)$percent,
                                                 phenotype_analysis(group_exon8$REP)$percent,
                                                phenotype_analysis(group_exon10$VI)$percent,
                                                phenotype_analysis(group_exon10$MT)$percent,
@@ -498,7 +516,7 @@ Phenotypes_groups <- data.frame( "Penetrance"=c(phenotype_analysis(group_exon8$V
                                                phenotype_analysis(group_exon10$LIV)$percent,
                                                phenotype_analysis(group_exon10$REN)$percent,
                                                phenotype_analysis(group_exon10$MEND)$percent,
-                                               phenotype_analysis(group_exon10$RES)$percent,
+                                               phenotype_analysis(group_exon10$PUL)$percent,
                                                phenotype_analysis(group_exon10$REP)$percent,
                                                phenotype_analysis(group_exon16$VI)$percent,
                                                phenotype_analysis(group_exon16$MT)$percent,
@@ -507,36 +525,17 @@ Phenotypes_groups <- data.frame( "Penetrance"=c(phenotype_analysis(group_exon8$V
                                                phenotype_analysis(group_exon16$LIV)$percent,
                                                phenotype_analysis(group_exon16$REN)$percent,
                                                phenotype_analysis(group_exon16$MEND)$percent,
-                                               phenotype_analysis(group_exon16$RES)$percent,
+                                               phenotype_analysis(group_exon16$PUL)$percent,
                                                phenotype_analysis(group_exon16$REP)$percent),
                                     
-                                  "Symptom" =c(rep(c("VI","MT","HRT","HL","LIV","REN","MEND","RES","REP"),3)),
+                                  "Symptom" =c(rep(c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"),3)),
                                     
                                    "group" =as.factor(c(rep(1,9),rep(2,9),rep(3,9)))
                                  ) 
 
-Phenotypes_groups$Symptom <- factor(Phenotypes_groups$Symptom, levels=c("VI","MT","HRT","HL","LIV","REN","MEND","RES","REP"))
+Phenotypes_groups$Symptom <- factor(Phenotypes_groups$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
-
-#Plot penetrance of mains phenotypes features in subgroups (E8,E10,E16)
-  
-# phenotypes_by_group <- ggplot(Phenotypes_groups, aes(x= group, y= Penetrance, fill=group),stat = "summary", fun.y = "mean")+
-#                                 geom_bar(stat = "identity")+
-#                                 facet_grid(cols = vars(Symptom))+
-#                                 scale_x_discrete(labels=c("1" = "E8", "2" = "E10", "3" = "E16"))+
-#                                 scale_fill_brewer(palette = "Set2")+
-#                                 labs(title = "Penetrance by symptom in each group",
-#                                            x="All patietns n = 227",
-#                                            y="Penetrance of the symptom(%)")+
-#                                 
-#                                 theme_bw()+
-#                                 theme(legend.position = "none")
-# 
-# phenotypes_by_group
-# save_plot(phenotypes_by_group,"phenotypes_by_group.pdf",7,5)
-# dev.off()
-
-#Plot penetrance of mains phenotypes features in subgroups (E8,E10,E16) using beta-distributions
+#Plot penetrance of mains phenotypes features in subgroups (G1, G2, G2) using beta-distributions
 
 Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysis(group_exon8$VI)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$MT)[,5:7]),
@@ -545,7 +544,7 @@ Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysi
                                                 unlist(phenotype_analysis(group_exon8$LIV)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$REN)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$MEND)[,5:7]),
-                                                unlist(phenotype_analysis(group_exon8$RES)[,5:7]),
+                                                unlist(phenotype_analysis(group_exon8$PUL)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$REP)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon10$VI)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon10$MT)[,5:7]),
@@ -554,7 +553,7 @@ Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysi
                                                 unlist(phenotype_analysis(group_exon10$LIV)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon10$REN)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon10$MEND)[,5:7]),
-                                                unlist(phenotype_analysis(group_exon10$RES)[,5:7]),
+                                                unlist(phenotype_analysis(group_exon10$PUL)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon10$REP)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon16$VI)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon16$MT)[,5:7]),
@@ -563,15 +562,15 @@ Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysi
                                                 unlist(phenotype_analysis(group_exon16$LIV)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon16$REN)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon16$MEND)[,5:7]),
-                                                unlist(phenotype_analysis(group_exon16$RES)[,5:7]),
+                                                unlist(phenotype_analysis(group_exon16$PUL)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon16$REP)[,5:7])),
                                  
-                                 "Symptom" =c(rep(c(rep("VI",3),rep("MT",3),rep("HRT",3),rep("HL",3),rep("LIV",3),rep("REN",3),rep("MEND",3),rep("RES",3),rep("REP",3)),3)),
+                                 "Symptom" =c(rep(c(rep("VI",3),rep("MT",3),rep("HL",3),rep("HRT",3),rep("LIV",3),rep("REN",3),rep("MEND",3),rep("PUL",3),rep("REP",3)),3)),
                                  
                                  "group" =as.factor(c(rep(1,27),rep(2,27),rep(3,27)))
 ) 
 
-Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HRT","HL","LIV","REN","MEND","RES","REP"))
+Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
 df.summary <- Phenotypes_groups_qvalues %>%
                   group_by(group, Symptom) %>%
@@ -602,7 +601,7 @@ for(i in c(20:26,28,30)){
 }
 
 stat.test <- as_tibble(df)
-stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HRT","HL","LIV","REN","MEND","RES","REP"))
+stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
 kable(stat.test, format = "html") %>%
   kable_styling(full_width = F, font_size = 9,bootstrap_options = c("striped", "hover", "condensed", "responsive"))
@@ -613,7 +612,7 @@ phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = gro
                                 geom_errorbar(data = df.summary, aes(ymin = Penetrance-sd, ymax = Penetrance+sd), width = 0.5)+
                                 facet_grid(cols = vars(Symptom))+
                                 scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
-                                scale_x_discrete(labels=c("1" = "E8", "2" = "E10", "3" = "E16"))+
+                                scale_x_discrete(labels=c("1" = "G1", "2" = "G2", "3" = "G3"))+
                                 scale_fill_brewer(palette = "Set2")+
                                 labs(title = "Penetrance by symptom in each group",
                                      x="All patients n = 227",
@@ -630,6 +629,91 @@ phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = gro
 phenotypes_by_group_qvalues_plot
 
 save_plot(phenotypes_by_group_qvalues_plot,"_Fig3_phenotypes_by_group_qvalue.pdf",9,5)
+dev.off()
+
+#Plot penetrance of mains phenotypes features in sex groups (F,M) using beta-distributions
+
+Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysis(group_F$VI)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$MT)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$HL)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$HRT)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$LIV)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$REN)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$MEND)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$PUL)[,5:7]),
+                                                        unlist(phenotype_analysis(group_F$REP)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$VI)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$MT)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$HL)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$HRT)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$LIV)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$REN)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$MEND)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$PUL)[,5:7]),
+                                                        unlist(phenotype_analysis(group_M$REP)[,5:7])),
+                                         
+                                         "Symptom" =c(rep(c(rep("VI",3),rep("MT",3),rep("HL",3),rep("HRT",3),rep("LIV",3),rep("REN",3),rep("MEND",3),rep("PUL",3),rep("REP",3)),2)),
+                                         
+                                         "group" =as.factor(c(rep("F",27),rep("M",27)))
+) 
+
+Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+
+df.summary <- Phenotypes_groups_qvalues %>%
+  group_by(group, Symptom) %>%
+  summarise(
+    sd = sd(Penetrance, na.rm = TRUE),
+    Penetrance = mean(Penetrance)
+  )
+df.summary
+
+for(i in c(20:26,28,30)){
+  
+  if(i==20){df <- data.frame()}
+  
+  df <- rbind(df,data.frame(list(Symptom=phenotypes[i-19], 
+                                 .y.= rep("Penetrance",1), 
+                                 pairwise_fisher_test(matrix( c(
+                                   phenotype_analysis(group_F[i])$no,
+                                   phenotype_analysis(group_M[i])$no,
+                                   phenotype_analysis(group_F[i])$yes,
+                                   phenotype_analysis(group_M[i])$yes),
+                                   byrow = FALSE, 
+                                   ncol = 2,
+                                   dimnames = list(c("F","M"), c("No","Yes"))),
+                                   p.adjust.method = "BH"))))
+  df                         
+}
+
+stat.test <- as_tibble(df)
+stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+
+kable(stat.test, format = "html") %>%
+  kable_styling(full_width = F, font_size = 9,bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Penetrance))+
+  geom_bar(data = Phenotypes_groups, aes(fill = group), stat = "identity")+
+  geom_jitter(position = position_jitter(0.1))+
+  geom_errorbar(data = df.summary, aes(ymin = Penetrance-sd, ymax = Penetrance+sd), width = 0.5)+
+  facet_grid(cols = vars(Symptom))+
+  scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
+  scale_x_discrete()+
+  scale_fill_brewer(palette = "Set2")+
+  labs(title = "Penetrance by symptom in each group",
+       x="All patients n = 227",
+       y="Penetrance of the symptom(%)")+
+  theme_bw()+
+  theme(legend.position = "none")+
+  stat_pvalue_manual(
+    stat.test,
+    y.position = 75,
+    step.increase = 0.12,
+    hide.ns = TRUE,
+    label = "p.adj")# Add adj.p-value
+
+phenotypes_by_group_qvalues_plot
+
+save_plot(phenotypes_by_group_qvalues_plot,"_FigS3_phenotypes_by_sex_group_qvalue.pdf",9,5)
 dev.off()
 
 
