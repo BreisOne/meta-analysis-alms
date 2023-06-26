@@ -98,15 +98,15 @@ phenotype_analysis <- function(df) {
                       no = sum(df=="0", na.rm = TRUE),
                       na = sum(is.na(df)))
   
-  # penetrance of symptoms in group
+  # prevalence of symptoms in group
   df_x$percent = round(df_x$yes/df_x$count*100,digits=2)
   df_x$upper = round(qbeta(0.975, df_x$yes + 1, df_x$no + 1)*100, digits = 2)
   df_x$lower = round(qbeta(0.025,df_x$yes + 1, df_x$no + 1)*100, digits = 2)
   df_x
 }
 
-penetrance_symptons_global <- function(update8forR){
-  penetrance <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
+prevalence_symptons_global <- function(update8forR){
+  prevalence <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
                                phenotype_analysis(update8forR$MT)$percent,
                                phenotype_analysis(update8forR$HL)$percent,
                                phenotype_analysis(update8forR$HRT)$percent,
@@ -123,28 +123,28 @@ penetrance_symptons_global <- function(update8forR){
                                phenotype_analysis(update8forR$NER)$percent,
                                phenotype_analysis(update8forR$ALO)$percent)
   )
-  colnames(penetrance)<- "Percent"
-  rownames(penetrance)<- phenotypes
-  penetrance <- penetrance %>% arrange(desc(penetrance$Percent))
-  penetrance
+  colnames(prevalence)<- "Percent"
+  rownames(prevalence)<- phenotypes
+  prevalence <- prevalence %>% arrange(desc(prevalence$Percent))
+  prevalence
 }
 
-penetrance_symptons_top <- function(update8forR){
-  penetrance <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
+prevalence_symptons_top <- function(update8forR){
+  prevalence <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
                                phenotype_analysis(update8forR$MT)$percent,
                                phenotype_analysis(update8forR$HL)$percent,
                                phenotype_analysis(update8forR$HRT)$percent,
                                phenotype_analysis(update8forR$LIV)$percent
   ))
-  colnames(penetrance)<- "Percent"
-  rownames(penetrance)<- c("VI","MT","HL","HRT","LIV")
-  penetrance <- penetrance %>% arrange(desc(penetrance$Percent))
-  penetrance
+  colnames(prevalence)<- "Percent"
+  rownames(prevalence)<- c("VI","MT","HL","HRT","LIV")
+  prevalence <- prevalence %>% arrange(desc(prevalence$Percent))
+  prevalence
 }
 
-penetrance_statistics_chisq_global <- function(update8forR){
+prevalence_statistics_chisq_global <- function(update8forR){
         ## test of significance
-        penetrance_table = matrix(c(
+        prevalence_table = matrix(c(
           phenotype_analysis(update8forR$VI)$no,
           phenotype_analysis(update8forR$MT)$no,
           phenotype_analysis(update8forR$HL)$no,
@@ -179,13 +179,13 @@ penetrance_statistics_chisq_global <- function(update8forR){
           phenotype_analysis(update8forR$ALO)$yes
         ), ncol = 16, byrow = TRUE)
         
-        chisq.test(penetrance_table)
-        chisq.test(penetrance_table)$p.value
+        chisq.test(prevalence_table)
+        chisq.test(prevalence_table)$p.value
 }
 
-penetrance_statistics_chisq_top <- function(update8forR){
+prevalence_statistics_chisq_top <- function(update8forR){
   ## test of significance
-  penetrance_table = matrix(c(
+  prevalence_table = matrix(c(
     phenotype_analysis(update8forR$VI)$no,
     phenotype_analysis(update8forR$MT)$no,
     phenotype_analysis(update8forR$HL)$no,
@@ -198,8 +198,8 @@ penetrance_statistics_chisq_top <- function(update8forR){
     phenotype_analysis(update8forR$LIV)$yes
   ), ncol = 5, byrow = TRUE)
   
-  chisq.test(penetrance_table)
-  chisq.test(penetrance_table)$p.value
+  chisq.test(prevalence_table)
+  chisq.test(prevalence_table)$p.value
 }
 
 plot_syndromic_score <- function(df,x_title){
@@ -208,7 +208,7 @@ plot_syndromic_score <- function(df,x_title){
     geom_vline(aes(xintercept = mean(SS)),col='black',size=1, linetype = "dashed")+
     scale_x_continuous(breaks=seq(0,1,0.2), limits = c(0,1.2))+
     scale_y_continuous(expand = c(0, 0))+
-    labs(title = "Distribution Syndromic score",
+    labs(title = "Syndromic score distribution",
          x = "Syndromic Score",
          y = x_title)+
     coord_flip()+
@@ -223,41 +223,41 @@ plot_syndromic_score_box <- function(df, x_var, x_title = "All patients n=227"){
     scale_color_brewer(palette = "Set2")+
     scale_fill_brewer(palette = "Set2")+
     scale_y_continuous(breaks=seq(0,1.4,0.2), limits = c(0,1.4))+
-    labs(title = "Distribution Syndromic score",
+    labs(title = "Syndromic score distribution",
          x = x_title,
          y = "Syndromic score")+
     theme_bw() +
     theme(legend.position = "none")
 }
 
-plot_penetrance <- function(update8forR, mode_analysis){
+plot_prevalence <- function(update8forR, mode_analysis){
   
   if(mode_analysis=="global"){
-    ## penetrance of phenotypes 
-    penetrance <- penetrance_symptons_global(update8forR)
+    ## prevalence of phenotypes 
+    prevalence <- prevalence_symptons_global(update8forR)
     
     ## test of significance
-    chisq_result  <- penetrance_statistics_chisq_global(update8forR)
+    chisq_result  <- prevalence_statistics_chisq_global(update8forR)
     
     ## Plot results
-    barplot(penetrance$Percent, ylim = c(0,100), ylab = "Penetrance of symptoms (%)", las = 1, names.arg = rownames(penetrance), main = "Penetrance of ALMS symptoms",
+    barplot(prevalence$Percent, ylim = c(0,100), ylab = "Prevalence of symptoms (%)", las = 1, names.arg = rownames(prevalence), main = "Prevalence of ALMS symptoms",
             xlab = paste("chisq.test p-value = ", format(chisq_result,digits = 4)))
     
     abline(h=15, lty = "longdash")
     
   }
   if(mode_analysis=="top"){
-    ## penetrance of phenotypes 
-    penetrance <- penetrance_symptons_top(update8forR)
+    ## prevalence of phenotypes 
+    prevalence <- prevalence_symptons_top(update8forR)
     
     ## test of significance
-    chisq_result  <- penetrance_statistics_chisq_top(update8forR)
+    chisq_result  <- prevalence_statistics_chisq_top(update8forR)
     
     ## Plot results
-    barplot(penetrance$Percent, ylim = c(0,110), ylab = "Penetrance of symptoms (%)", las = 1, names.arg = rownames(penetrance), main = "Penetrance of ALMS symptoms",
+    barplot(prevalence$Percent, ylim = c(0,110), ylab = "Prevalence of symptoms (%)", las = 1, names.arg = rownames(prevalence), main = "prevalence of ALMS symptoms",
                         xlab = paste("chisq.test p-value = ", format(chisq_result,digits = 4)))
     
-    penetrance_top <- recordPlot()
+    prevalence_top <- recordPlot()
   }
 
 }
@@ -286,22 +286,17 @@ df_mutations <- data.frame(table(c(str_squish(ALMS1_cohort$PV1_PROTEIN),str_squi
 colnames(df_mutations) <- c("mutation_protein","count")
 df_mutations <- df_mutations[df_mutations$mutation_protein!="splice site",]
 
-# df_mutations_concat<- ALMS1_cohort[ALMS1_cohort$PV1_PROTEIN!="splice site"&ALMS1_cohort$PV2_PROTEIN!="splice site",]
-# 
-# df_mutations_concat<- data.frame(table(c(str_squish(ALMS1_cohort$concat_1),str_squish(ALMS1_cohort$concat_2))))
-
-df_mutations_cDNA<- ALMS1_cohort[ALMS1_cohort$PV1_PROTEIN!="splice site"&ALMS1_cohort$PV2_PROTEIN!="splice site",]
-
-df_mutations_cDNA<- data.frame(table(c(str_squish(ALMS1_cohort$PV1_DNA),str_squish(ALMS1_cohort$PV2_DNA))))
-colnames(df_mutations_cDNA) <- c("mutation_cDNA","count")
+df_mutations <- df_mutations %>%
+                  mutate(position = str_extract(mutation_protein, "\\d{2,4}(?=\\D)"))%>%
+                  arrange(as.numeric(gsub("[^0-9]", "", position)))
 
 mutations_cohort <- ggplot(df_mutations, aes(x = mutation_protein , y = count) )+
                         geom_bar(
                           # fill= "#8EA0CB",
                           stat="identity")+
-                        labs(title = "Count of mutations in ALMS1 cohort",
-                             x = "Mutations",
-                             y = "Count")+
+                        labs(title = "Pathogenic alleles in ALMS cohort",
+                             x = "Pathogenic variant",
+                             y = "Absolute frequency")+
                         # scale_fill_grey()+
                         theme_classic2() +
                         coord_flip()+
@@ -311,11 +306,11 @@ mutations_cohort
 save_plot(mutations_cohort,"_FigS1_mutations_cohort.pdf",5,30)
 dev.off()
 
-mutations_cohort_top <- ggplot(df_mutations[which(df_mutations$count>2),], aes(x = mutation_protein , y = count) )+
+mutations_cohort_top <- ggplot(df_mutations[which(df_mutations$count>2),], aes(x = factor(mutation_protein, level = mutation_protein) , y = count) )+
                             geom_bar(stat="identity")+
-                            labs(title = "Count of mutations in ALMS1 cohort",
-                                 x = "Mutations",
-                                 y = "Count")+
+                            labs(title = "Pathogenic alleles in ALMS cohort",
+                                 x = "Pathogenic variant",
+                                 y = "Absolute frequency")+
                             scale_y_continuous(breaks=seq(0,40,5), limits = c(0,40))+
                             # scale_fill_grey()+
                             theme_classic2() +
@@ -327,7 +322,7 @@ mutations_cohort_top
 save_plot(mutations_cohort_top,"_Fig1_mutations_cohort_top.pdf",9,5)
 dev.off()
 
-## Penetrance of mutations in ALMS1 exons genes
+## prevalence of mutations in ALMS1 exons genes
 
 df <- data.frame(table(c(ALMS1_cohort$EA1,ALMS1_cohort$EA2)))
 colnames(df) <- c("exon","count")
@@ -337,9 +332,9 @@ df$percentage = round(df$count/length(c(ALMS1_cohort$EA1,ALMS1_cohort$EA2))*100,
 
 Penetrance_alleles <- ggplot(df, aes(x = exon, y = count) )+
                       geom_bar(stat="identity")+
-                      labs(title = "Penetrance of mutated alelles in ALMS1 exons",
-                           x = "Exon",
-                           y = "Alleles")+
+                      labs(title = "Pathogenic alleles of ALMS1 gene",
+                           x = "Exon with the pathogenic variant",
+                           y = "Absolute frequency")+
                       # scale_fill_grey()+
                       theme_classic2() +
                       theme(legend.position = "none")
@@ -394,18 +389,18 @@ groups_by_sex
 save_plot(groups_by_sex,"_Fig1_groups_by_sex.pdf",7,5)
 dev.off()
 
-#Penetrance of symptoms
+#Prevalence of symptoms
 
-pdf(file = paste0("./Figures/", "_FigS1_penetrance_global.pdf"), width = 12, height = 5)
-plot_penetrance(ALMS1_cohort, "global")
+pdf(file = paste0("./Figures/", "_FigS1_prevalence_global.pdf"), width = 12, height = 5)
+plot_prevalence(ALMS1_cohort, "global")
 dev.off()
 
 
-penetrance_top <- plot_penetrance(ALMS1_cohort, "top")
-save_plot(penetrance_top,"_Fig2_penetrance_top.pdf",5,5)
+prevalence_top <- plot_prevalence(ALMS1_cohort, "top")
+save_plot(prevalence_top,"_Fig2_prevalence_top.pdf",5,5)
 dev.off()
 
-#Distribution syndromic score complete cohort
+#Syndromic score distribution complete cohort
 
 allpatients_ss <- plot_syndromic_score(ALMS1_cohort, "All patients \n n=227")
 allpatients_ss
@@ -413,7 +408,7 @@ allpatients_ss
 save_plot(allpatients_ss,"_Fig2_allpatients_ss.pdf",5,7)
 dev.off()
 
-#Distribution syndromic score by sex
+#Syndromic score distribution by sex
 
 sexgroups_ss_box_plot <- plot_syndromic_score_box(ALMS1_cohort, ALMS1_cohort$Sex)+
                           stat_compare_means(method = "wilcox.test", label.y = 1.3 )
@@ -423,7 +418,7 @@ sexgroups_ss_box_plot
 save_plot(sexgroups_ss_box_plot,"_Fig2_sexgroups_ss_boxplot.pdf",6,6)
 dev.off()
 
-#Distribution syndromic score by ages
+#Syndromic score distribution by ages
 
 agegroups_ss_box_plot <- plot_syndromic_score_box(ALMS1_cohort, ALMS1_cohort$Age2)+
                           stat_compare_means(method = "kruskal.test", label.y = 1.3)
@@ -433,9 +428,9 @@ agegroups_ss_box_plot
 save_plot(agegroups_ss_box_plot,"_Fig2_agegroups_ss_box_plot.pdf",6,6)
 dev.off()
 
-#Distribution syndromic score in subgroups (G1, G2, G2)
+#Syndromic score distribution in subgroups (G1, G2, G2)
 
-#Distribution syndromic score in subgroups
+#Syndromic score distribution in subgroups
 stat.test <- compare_means(SS ~ group,  data = ALMS1_cohort, p.adjust.method ="BH")
 
 
@@ -461,8 +456,6 @@ agegroups_ss_cor_plot <- ggplot(ALMS1_cohort, aes(AGE_ORIG, SS))+
                           ylab("Syndromic Score")+
                           geom_smooth(method=lm)+
                           stat_cor(label.x = 30, label.y = 0.3)+
-                          # scale_y_continuous(limits = c(0, 1), oob = scales::squish)+
-                          # scale_x_continuous(limits = c(0, 60), oob = scales::squish)+
                           geom_jitter()+
                           theme_bw()
 
@@ -471,7 +464,7 @@ agegroups_ss_cor_plot
 save_plot(agegroups_ss_cor_plot,"_FigS4_agegroups_ss_cor_plot.pdf",7,7)
 dev.off()
 
-#Distribution syndromic score in subgroups by ages
+#Syndromic score distribution in subgroups by ages
 
 stat.test <- ALMS1_cohort %>%
   group_by(Age2)%>%
@@ -494,13 +487,13 @@ subgroups_ss_ages_box_plot
 save_plot(subgroups_ss_ages_box_plot,"_Fig3_subgroups_ss_ages_boxplot.pdf",9,6)
 dev.off()
 
-#Penetrance of mains phenotypes features in subgroups (G1, G2, G2)
+#prevalence of mains phenotypes features in subgroups (G1, G2, G2)
 
 group_exon8 <- ALMS1_cohort[ALMS1_cohort$group==1,]
 group_exon10 <- ALMS1_cohort[ALMS1_cohort$group==2,]
 group_exon16 <- ALMS1_cohort[ALMS1_cohort$group==3,]
 
-Phenotypes_groups <- data.frame( "Penetrance"=c(phenotype_analysis(group_exon8$VI)$percent,
+Phenotypes_groups <- data.frame( "Prevalence"=c(phenotype_analysis(group_exon8$VI)$percent,
                                                 phenotype_analysis(group_exon8$MT)$percent,
                                                 phenotype_analysis(group_exon8$HL)$percent,
                                                 phenotype_analysis(group_exon8$HRT)$percent,
@@ -535,9 +528,9 @@ Phenotypes_groups <- data.frame( "Penetrance"=c(phenotype_analysis(group_exon8$V
 
 Phenotypes_groups$Symptom <- factor(Phenotypes_groups$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
-#Plot penetrance of mains phenotypes features in subgroups (G1, G2, G2) using beta-distributions
+#Plot prevalence of mains phenotypes features in subgroups (G1, G2, G2) using beta-distributions
 
-Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysis(group_exon8$VI)[,5:7]),
+Phenotypes_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_analysis(group_exon8$VI)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$MT)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$HL)[,5:7]),
                                                 unlist(phenotype_analysis(group_exon8$HRT)[,5:7]),
@@ -575,8 +568,8 @@ Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, l
 df.summary <- Phenotypes_groups_qvalues %>%
                   group_by(group, Symptom) %>%
                   summarise(
-                    sd = sd(Penetrance, na.rm = TRUE),
-                    Penetrance = mean(Penetrance)
+                    sd = sd(Prevalence, na.rm = TRUE),
+                    Prevalence = mean(Prevalence)
                   )
 df.summary
 
@@ -585,7 +578,7 @@ for(i in c(20:26,28,30)){
   if(i==20){df <- data.frame()}
   
   df <- rbind(df,data.frame(list(Symptom=phenotypes[i-19], 
-                                 .y.= rep("Penetrance",3), 
+                                 .y.= rep("Prevalence",3), 
                                  pairwise_fisher_test(matrix( c(
                                    phenotype_analysis(group_exon8[i])$no,
                                    phenotype_analysis(group_exon10[i])$no,
@@ -606,17 +599,17 @@ stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HL","HRT","LI
 kable(stat.test, format = "html") %>%
   kable_styling(full_width = F, font_size = 9,bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
-phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Penetrance))+
+phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Prevalence))+
                                 geom_bar(data = Phenotypes_groups, aes(fill = group), stat = "identity")+
                                 geom_jitter(position = position_jitter(0.1))+
-                                geom_errorbar(data = df.summary, aes(ymin = Penetrance-sd, ymax = Penetrance+sd), width = 0.5)+
+                                geom_errorbar(data = df.summary, aes(ymin = Prevalence-sd, ymax = Prevalence+sd), width = 0.5)+
                                 facet_grid(cols = vars(Symptom))+
                                 scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
                                 scale_x_discrete(labels=c("1" = "G1", "2" = "G2", "3" = "G3"))+
                                 scale_fill_brewer(palette = "Set2")+
-                                labs(title = "Penetrance by symptom in each group",
+                                labs(title = "Prevalence by symptom in each group",
                                      x="All patients n = 227",
-                                     y="Penetrance of the symptom(%)")+
+                                     y="Prevalence of the symptom(%)")+
                                 theme_bw()+
                                 theme(legend.position = "none")+
                                 stat_pvalue_manual(
@@ -631,9 +624,9 @@ phenotypes_by_group_qvalues_plot
 save_plot(phenotypes_by_group_qvalues_plot,"_Fig3_phenotypes_by_group_qvalue.pdf",9,5)
 dev.off()
 
-#Plot penetrance of mains phenotypes features in sex groups (F,M) using beta-distributions
+#Plot prevalence of mains phenotypes features in sex groups (F,M) using beta-distributions
 
-Phenotypes_groups_qvalues <- data.frame( "Penetrance"=c(unlist(phenotype_analysis(group_F$VI)[,5:7]),
+Phenotypes_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_analysis(group_F$VI)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$MT)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$HL)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$HRT)[,5:7]),
@@ -662,8 +655,8 @@ Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, l
 df.summary <- Phenotypes_groups_qvalues %>%
   group_by(group, Symptom) %>%
   summarise(
-    sd = sd(Penetrance, na.rm = TRUE),
-    Penetrance = mean(Penetrance)
+    sd = sd(Prevalence, na.rm = TRUE),
+    Prevalence = mean(Prevalence)
   )
 df.summary
 
@@ -672,7 +665,7 @@ for(i in c(20:26,28,30)){
   if(i==20){df <- data.frame()}
   
   df <- rbind(df,data.frame(list(Symptom=phenotypes[i-19], 
-                                 .y.= rep("Penetrance",1), 
+                                 .y.= rep("Prevalence",1), 
                                  pairwise_fisher_test(matrix( c(
                                    phenotype_analysis(group_F[i])$no,
                                    phenotype_analysis(group_M[i])$no,
@@ -691,17 +684,17 @@ stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HL","HRT","LI
 kable(stat.test, format = "html") %>%
   kable_styling(full_width = F, font_size = 9,bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
-phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Penetrance))+
+phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Prevalence))+
   geom_bar(data = Phenotypes_groups, aes(fill = group), stat = "identity")+
   geom_jitter(position = position_jitter(0.1))+
-  geom_errorbar(data = df.summary, aes(ymin = Penetrance-sd, ymax = Penetrance+sd), width = 0.5)+
+  geom_errorbar(data = df.summary, aes(ymin = Prevalence-sd, ymax = Prevalence+sd), width = 0.5)+
   facet_grid(cols = vars(Symptom))+
   scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
   scale_x_discrete()+
   scale_fill_brewer(palette = "Set2")+
-  labs(title = "Penetrance by symptom in each group",
+  labs(title = "Prevalence by symptom in each group",
        x="All patients n = 227",
-       y="Penetrance of the symptom(%)")+
+       y="Prevalence of the symptom(%)")+
   theme_bw()+
   theme(legend.position = "none")+
   stat_pvalue_manual(
@@ -729,7 +722,7 @@ Fig1
 save_plot(Fig1,"Fig1_cohort_description.pdf",17,10)
 dev.off()
 
-Fig2 <- plot_grid(penetrance_top,
+Fig2 <- plot_grid(prevalence_top,
                   allpatients_ss,
                   sexgroups_ss_box_plot,
                   agegroups_ss_box_plot,
