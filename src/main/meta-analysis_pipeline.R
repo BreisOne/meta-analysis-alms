@@ -8,14 +8,14 @@
 libraries <- c('InteractionSet','trackViewer','org.Hs.eg.db','TxDb.Hsapiens.UCSC.hg19.knownGene','kableExtra','gridGraphics','ggpubr','cowplot','rstatix','readxl','dendsort','apeglm','VennDiagram', 'RColorBrewer', 'pheatmap', 'tidyverse','scales','ggrepel')
 lapply(libraries,library, character.only = TRUE)
 
-setwd("C:/Users/Brise/OneDrive - Universidade de Vigo/Tesis - Universidad de Vigo/Meta analisis ALMS1")
+#setwd("C:/Users/Brise/OneDrive - Universidade de Vigo/Tesis - Universidad de Vigo/Meta analisis ALMS1")
 
-Curated_ALMS1_DB <- read_xlsx("Curated ALMS1 DB.xlsx",
-                               sheet = "Genotype-Phenotype")
+Curated_ALMS1_DB <- as.data.frame(read_xlsx("data/Curated_ALMS1_DB.xlsx",
+                                    sheet = "Genotype-Phenotype"))
 
-ALMS1_cohort <- Curated_ALMS1_DB[complete.cases(Curated_ALMS1_DB[,c(5:18,20:36)]),c(1:36)]
+ALMS1_cohort <- Curated_ALMS1_DB[complete.cases(Curated_ALMS1_DB[,c(5:19,21:37)]),c(1:37)]
 colnames(ALMS1_cohort)[6:15] <- c("PV1_DNA", "EA1", "PV1_PROTEIN","TM_1","PV2_DNA", "EA2", "PV2_PROTEIN","TM_2","GS","LT")
-colnames(ALMS1_cohort)[36] <- "SS"
+colnames(ALMS1_cohort)[37] <- "SS"
 
 ALMS1_cohort <- ALMS1_cohort %>% mutate(group = as.factor(ifelse(LT < 9, 1,ifelse(LT >= 9 & LT < 14,2,3))))
 
@@ -28,7 +28,7 @@ summary_analysis <- function(subset_x) {
   # number of patients
   df_x = data.frame(count = nrow(subset_x))
   # sex
-  
+
   df_x$sex = sum(is.na(subset_x$Sex)==FALSE)
   df_x$male = sum(subset_x$Sex=="M", na.rm = TRUE)
   df_x$female = sum(subset_x$Sex=="F", na.rm = TRUE)
@@ -208,7 +208,7 @@ plot_syndromic_score <- function(df,x_title){
     geom_vline(aes(xintercept = mean(SS)),col='black',size=1, linetype = "dashed")+
     scale_x_continuous(breaks=seq(0,1,0.2), limits = c(0,1.2))+
     scale_y_continuous(expand = c(0, 0))+
-    labs(title = "Syndromic score distribution",
+    labs(title = "Distribution Syndromic score",
          x = "Syndromic Score",
          y = x_title)+
     coord_flip()+
@@ -263,7 +263,7 @@ plot_prevalence <- function(update8forR, mode_analysis){
 }
 
 save_plot <- function(plot,name, w, h){
-  pdf(file=paste0("./Figures/",name), width=w, height=h)
+  pdf(file=paste0("./output/figures/",name), width=w, height=h)
   plot
 }
 
@@ -391,7 +391,7 @@ dev.off()
 
 #Prevalence of symptoms
 
-pdf(file = paste0("./Figures/", "_FigS1_prevalence_global.pdf"), width = 12, height = 5)
+pdf(file = paste0("./output/figures/", "_FigS1_prevalence_global.pdf"), width = 12, height = 5)
 plot_prevalence(ALMS1_cohort, "global")
 dev.off()
 
