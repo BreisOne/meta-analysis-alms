@@ -6,8 +6,6 @@
 .RData
 .RDataTmp
 .Ruserdata
-renv/
-renv.lock
 
 # User-specific files
 .Ruserdata
@@ -56,4 +54,4 @@ rsconnect/
 
 #Files
 Curated_ALMS1_DB.xlsx
-*.pdf
+_*.pdf
