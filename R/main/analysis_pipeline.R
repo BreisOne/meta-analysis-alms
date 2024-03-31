@@ -5,7 +5,7 @@
 #output:
 #---
   
-libraries <- c('InteractionSet','trackViewer','org.Hs.eg.db','TxDb.Hsapiens.UCSC.hg19.knownGene','kableExtra','gridGraphics','ggpubr','cowplot','rstatix','readxl','dendsort','apeglm','VennDiagram', 'RColorBrewer', 'pheatmap', 'tidyverse','scales','ggrepel')
+libraries <- c('kableExtra','ggpubr','cowplot','rstatix','readxl', 'tidyverse')
 lapply(libraries,library, character.only = TRUE)
 
 Curated_ALMS1_DB <- as.data.frame(read_xlsx("./data/Curated_ALMS1_DB.xlsx",
@@ -222,8 +222,8 @@ dev.off()
 #Syndromic score distribution in subgroups by ages
 
 stat.test <- ALMS1_cohort %>%
-  group_by(Age2)%>%
-  pairwise_wilcox_test(SS ~ group, p.adjust.method ="BH")
+              group_by(Age2)%>%
+              pairwise_wilcox_test(SS ~ group, p.adjust.method ="BH")
 
 stat.test
 
