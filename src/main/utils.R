@@ -229,7 +229,7 @@ plot_prevalence <- function(update8forR, mode_analysis){
     chisq_result  <- prevalence_statistics_chisq_top(update8forR)
     
     ## Plot results
-    barplot(prevalence$Percent, ylim = c(0,110), ylab = "Prevalence of symptoms (%)", las = 1, names.arg = rownames(prevalence), main = "prevalence of ALMS symptoms",
+    barplot(prevalence$Percent, ylim = c(0,110), ylab = "Prevalence of symptoms (%)", las = 1, names.arg = rownames(prevalence), main = "Prevalence of ALMS symptoms",
             xlab = paste("chisq.test p-value = ", format(chisq_result,digits = 4)))
     
     prevalence_top <- recordPlot()
