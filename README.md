@@ -5,7 +5,9 @@ This repository contains the code and data for a genotype-phenotype meta-analysi
 Part of the code used was adapted from Niedarlova et al., 2019 in:
 
 ```
-Niederlova V, Modrak M, Tsyklauri O, Huranova M, Stepanek O. Meta-analysis of genotype-phenotype associations in Bardet-Biedl syndrome uncovers differences among causative genes. Hum Mutat. 2019 Nov;40(11):2068-2087. doi: 10.1002/humu.23862. Epub 2019 Jul 29. PMID: 31283077.
+Niederlova V, Modrak M, Tsyklauri O, Huranova M, Stepanek O. Meta-analysis of 
+genotype-phenotype associations in Bardet-Biedl syndrome uncovers differences among causative 
+genes. Hum Mutat. 2019 Nov;40(11):2068-2087. doi: 10.1002/humu.23862. Epub 2019 Jul 29. PMID: 31283077.
 
 ```
 
@@ -84,7 +86,8 @@ The data used in this analysis is sourced from the literature and is available i
 If you use this code or data in your research, please cite as:
 
 ```
-Bea-Mascato B, Valverde D. Genotype–phenotype associations in Alström syndrome: a systematic review and meta-analysis. Journal of Medical Genetics 2024;61:18-26.
+Bea-Mascato B, Valverde D. Genotype–phenotype associations in Alström 
+syndrome: a systematic review and meta-analysis. Journal of Medical Genetics 2024;61:18-26.
 ```
 
 ## License
