@@ -8,7 +8,7 @@
 libraries <- c('InteractionSet','trackViewer','org.Hs.eg.db','TxDb.Hsapiens.UCSC.hg19.knownGene','kableExtra','gridGraphics','ggpubr','cowplot','rstatix','readxl','dendsort','apeglm','VennDiagram', 'RColorBrewer', 'pheatmap', 'tidyverse','scales','ggrepel')
 lapply(libraries,library, character.only = TRUE)
 
-Curated_ALMS1_DB <- as.data.frame(read_xlsx("data/Curated_ALMS1_DB.xlsx",
+Curated_ALMS1_DB <- as.data.frame(read_xlsx("./data/Curated_ALMS1_DB.xlsx",
                                     sheet = "Genotype-Phenotype"))
 
 ALMS1_cohort <- Curated_ALMS1_DB[complete.cases(Curated_ALMS1_DB[,c(5:19,21:37)]),c(1:37)]
@@ -146,7 +146,7 @@ dev.off()
 
 #Prevalence of symptoms
 
-pdf(file = paste0("./output/figures/", "_FigS1_prevalence_global.pdf"), width = 12, height = 5)
+pdf(file = paste0("./results/figures/", "_FigS1_prevalence_global.pdf"), width = 12, height = 5)
 plot_prevalence(ALMS1_cohort, "global")
 dev.off()
 
@@ -328,11 +328,11 @@ df.summary <- Phenotypes_groups_qvalues %>%
                   )
 df.summary
 
-for(i in c(20:26,28,30)){
+for(i in c(21:27,29,31)){
   
-  if(i==20){df <- data.frame()}
+  if(i==21){df <- data.frame()}
   
-  df <- rbind(df,data.frame(list(Symptom=phenotypes[i-19], 
+  df <- rbind(df,data.frame(list(Symptom=phenotypes[i-20], 
                                  .y.= rep("Prevalence",3), 
                                  pairwise_fisher_test(matrix( c(
                                    phenotype_analysis(group_exon8[i])$no,
@@ -379,9 +379,41 @@ phenotypes_by_group_qvalues_plot
 save_plot(phenotypes_by_group_qvalues_plot,"_Fig3_phenotypes_by_group_qvalue.pdf",9,5)
 dev.off()
 
+#Penetrance of mains phenotypes features in sexgroups (F, M)
+
+group_F <- ALMS1_cohort[ALMS1_cohort$Sex=="F",]
+group_M <- ALMS1_cohort[ALMS1_cohort$Sex=="M",]
+
+Phenotypes_sex_groups <- data.frame( "Prevalence"=c(phenotype_analysis(group_F$VI)$percent,
+                                                phenotype_analysis(group_F$MT)$percent,
+                                                phenotype_analysis(group_F$HL)$percent,
+                                                phenotype_analysis(group_F$HRT)$percent,
+                                                phenotype_analysis(group_F$LIV)$percent,
+                                                phenotype_analysis(group_F$REN)$percent,
+                                                phenotype_analysis(group_F$MEND)$percent,
+                                                phenotype_analysis(group_F$PUL)$percent,
+                                                phenotype_analysis(group_F$REP)$percent,
+                                                phenotype_analysis(group_M$VI)$percent,
+                                                phenotype_analysis(group_M$MT)$percent,
+                                                phenotype_analysis(group_M$HL)$percent,
+                                                phenotype_analysis(group_M$HRT)$percent,
+                                                phenotype_analysis(group_M$LIV)$percent,
+                                                phenotype_analysis(group_M$REN)$percent,
+                                                phenotype_analysis(group_M$MEND)$percent,
+                                                phenotype_analysis(group_M$PUL)$percent,
+                                                phenotype_analysis(group_M$REP)$percent),
+                                 
+                                 "Symptom" =c(rep(c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"),2)),
+                                 
+                                 "group" =as.factor(c(rep("F",9),rep("M",9)))
+) 
+
+Phenotypes_sex_groups$Symptom <- factor(Phenotypes_groups$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+
+
 #Plot prevalence of mains phenotypes features in sex groups (F,M) using beta-distributions
 
-Phenotypes_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_analysis(group_F$VI)[,5:7]),
+Phenotypes_sex_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_analysis(group_F$VI)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$MT)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$HL)[,5:7]),
                                                         unlist(phenotype_analysis(group_F$HRT)[,5:7]),
@@ -405,9 +437,9 @@ Phenotypes_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_analysi
                                          "group" =as.factor(c(rep("F",27),rep("M",27)))
 ) 
 
-Phenotypes_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+Phenotypes_sex_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
-df.summary <- Phenotypes_groups_qvalues %>%
+df.summary <- Phenotypes_sex_groups_qvalues %>%
   group_by(group, Symptom) %>%
   summarise(
     sd = sd(Prevalence, na.rm = TRUE),
@@ -415,9 +447,9 @@ df.summary <- Phenotypes_groups_qvalues %>%
   )
 df.summary
 
-for(i in c(20:26,28,30)){
+for(i in c(21:27,29,31)){
   
-  if(i==20){df <- data.frame()}
+  if(i==21){df <- data.frame()}
   
   df <- rbind(df,data.frame(list(Symptom=phenotypes[i-19], 
                                  .y.= rep("Prevalence",1), 
@@ -439,29 +471,29 @@ stat.test$Symptom <- factor(stat.test$Symptom, levels=c("VI","MT","HL","HRT","LI
 kable(stat.test, format = "html") %>%
   kable_styling(full_width = F, font_size = 9,bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
-phenotypes_by_group_qvalues_plot<- ggplot(Phenotypes_groups_qvalues, aes(x = group, y = Prevalence))+
-  geom_bar(data = Phenotypes_groups, aes(fill = group), stat = "identity")+
-  geom_jitter(position = position_jitter(0.1))+
-  geom_errorbar(data = df.summary, aes(ymin = Prevalence-sd, ymax = Prevalence+sd), width = 0.5)+
-  facet_grid(cols = vars(Symptom))+
-  scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
-  scale_x_discrete()+
-  scale_fill_brewer(palette = "Set2")+
-  labs(title = "Prevalence by symptom in each group",
-       x="All patients n = 227",
-       y="Prevalence of the symptom(%)")+
-  theme_bw()+
-  theme(legend.position = "none")+
-  stat_pvalue_manual(
-    stat.test,
-    y.position = 75,
-    step.increase = 0.12,
-    hide.ns = TRUE,
-    label = "p.adj")# Add adj.p-value
+phenotypes_by_sex_group_qvalues_plot<- ggplot(Phenotypes_sex_groups_qvalues, aes(x = group, y = Prevalence))+
+                                        geom_bar(data = Phenotypes_sex_groups, aes(fill = group), stat = "identity")+
+                                        geom_jitter(position = position_jitter(0.1))+
+                                        geom_errorbar(data = df.summary, aes(ymin = Prevalence-sd, ymax = Prevalence+sd), width = 0.5)+
+                                        facet_grid(cols = vars(Symptom))+
+                                        scale_y_continuous(breaks=seq(0,120,20), limits = c(0,120))+
+                                        scale_x_discrete()+
+                                        scale_fill_brewer(palette = "Set2")+
+                                        labs(title = "Prevalence by symptom in each group",
+                                             x="All patients n = 227",
+                                             y="Prevalence of the symptom(%)")+
+                                        theme_bw()+
+                                        theme(legend.position = "none")+
+                                        stat_pvalue_manual(
+                                          stat.test,
+                                          y.position = 75,
+                                          step.increase = 0.12,
+                                          hide.ns = TRUE,
+                                          label = "p.adj")# Add adj.p-value
 
-phenotypes_by_group_qvalues_plot
+phenotypes_by_sex_group_qvalues_plot
 
-save_plot(phenotypes_by_group_qvalues_plot,"_FigS3_phenotypes_by_sex_group_qvalue.pdf",9,5)
+save_plot(phenotypes_by_sex_group_qvalues_plot,"_FigS3_phenotypes_by_sex_group_qvalue.pdf",9,5)
 dev.off()
 
 

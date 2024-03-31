@@ -238,6 +238,6 @@ plot_prevalence <- function(update8forR, mode_analysis){
 }
 
 save_plot <- function(plot,name, w, h){
-  pdf(file=paste0("./output/figures/",name), width=w, height=h)
+  pdf(file=paste0("./results/figures/",name), width=w, height=h)
   plot
 }
