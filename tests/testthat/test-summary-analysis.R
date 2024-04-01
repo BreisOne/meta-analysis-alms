@@ -1,6 +1,4 @@
 
-# TEST 1
-
 # Test for summary_analysis function
 test_that("summary_analysis function computes summary statistics correctly", {
   # Create a sample data frame for testing
@@ -28,18 +26,18 @@ test_that("summary_analysis function computes summary statistics correctly", {
   expect_equal(round(result[1, "% of female"], digits = 2), 42.86)
   
   # Check if age information availability and distribution are computed correctly
-  expect_equal(result[1, "Age information available"], 6)
+  expect_equal(result[1, "Age information available"], 7)
   expect_equal(result[1, "Number of age 10-19 years"], 2)
   expect_equal(result[1, "Number of age 20-29 years"], 2)
   expect_equal(result[1, "Number of age 30-39 years"], 2)
   # Add more checks for other age groups
   
   # Check if mutation type availability and distribution are computed correctly
-  expect_equal(result[1, "Mutation type avaiable"], 6)
-  expect_equal(result[1, "Number of cLOF"], 3)
-  expect_equal(result[1, "Number of missense"], 3)
+  expect_equal(result[1, "Mutation type avaiable"], 12)
+  expect_equal(result[1, "Number of cLOF"], 5)
+  expect_equal(result[1, "Number of missense"], 5)
   expect_equal(result[1, "Number of intronic"], 2)
-  expect_equal(result[1, "% of cLOF mutations"], 50)
-  expect_equal(result[1, "% of missense mutations"], 50)
-  expect_equal(result[1, "% of intronic mutations"], 33.33)
+  expect_equal(round(result[1, "% of cLOF mutations"], digits = 2), 41.67)
+  expect_equal(round(result[1, "% of missense mutations"], digits = 2), 41.67)
+  expect_equal(round(result[1, "% of intronic mutations"], digits = 2), 16.67)
 })

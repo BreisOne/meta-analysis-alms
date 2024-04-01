@@ -1,4 +1,6 @@
-# This function, summary_analysis(), calculates summary statistics from a given subset of data.
+# Function: summary_analysis. 
+
+# Description: This function calculates summary statistics from a given subset of data.
 # It computes various metrics including:
 # - Number of patients in the subset.
 # - Sex information availability and the distribution of male and female patients.
@@ -7,7 +9,6 @@
 # The function returns a data frame with the computed summary statistics.
 
 phenotypes <- c("VI","MT","HL","HRT","LIV","REN","PUL","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
-
 
 summary_analysis <- function(subset_x) {
   
@@ -78,6 +79,19 @@ summary_analysis <- function(subset_x) {
   
 }
 
+# Function: phenotype_analysis
+# 
+# Description: This function calculates various statistics related to phenotype analysis based on the input data frame `df`. 
+# It calculates counts and prevalence of phenotypes in the group. The function returns a data frame `df_x` containing 
+# these statistics including the count of non-missing values, the count of "yes" values, the count of "no" values, 
+# the count of missing values, the percentage of "yes" values, and confidence intervals for the prevalence of "yes" values.
+# 
+# Args:
+#   df: A data frame containing information about phenotypes.
+# 
+# Returns:
+#   df_x: A data frame with counts and prevalence of phenotypes.
+
 phenotype_analysis <- function(df) {
   df_x <- data.frame( count = sum(is.na(df)==FALSE),
                       yes = sum(df, na.rm = TRUE),
@@ -90,6 +104,22 @@ phenotype_analysis <- function(df) {
   df_x$lower = round(qbeta(0.025,df_x$yes + 1, df_x$no + 1)*100, digits = 2)
   df_x
 }
+
+# Function: prevalence_symptons_global
+# 
+# Description: This function calculates the prevalence of symptoms globally across different phenotypes based on 
+# the input data frame `update8forR`. It calls the `phenotype_analysis` function for each phenotype to calculate
+# the percentage of patients exhibiting each symptom. The function then compiles these percentages into a data frame 
+# `prevalence` with each row corresponding to a phenotype and its corresponding prevalence percentage. The function 
+# returns the `prevalence` data frame sorted in descending order of prevalence percentages.
+# 
+# Args:
+#   update8forR: A list or data frame containing information about different phenotypes, each identified by a 
+#                specific key.
+# 
+# Returns:
+#   prevalence: A data frame containing the prevalence of symptoms across different phenotypes.
+#
 
 prevalence_symptons_global <- function(update8forR){
   prevalence <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
@@ -115,6 +145,22 @@ prevalence_symptons_global <- function(update8forR){
   prevalence
 }
 
+# Function: prevalence_symptons_top
+# 
+# Description: This function calculates the prevalence of symptoms for the top five phenotypes based on the input 
+# data frame `update8forR`. It calls the `phenotype_analysis` function for each phenotype to calculate the percentage
+# of patients exhibiting each symptom. The function then compiles these percentages into a data frame `prevalence` 
+# with each row corresponding to a phenotype and its corresponding prevalence percentage. The function returns the 
+# `prevalence` data frame sorted in descending order of prevalence percentages for the top five phenotypes.
+# 
+# Args:
+#   update8forR: A list or data frame containing information about different phenotypes, each identified by a 
+#                specific key.
+# 
+# Returns:
+#   prevalence: A data frame containing the prevalence of symptoms for the top five phenotypes.
+#
+
 prevalence_symptons_top <- function(update8forR){
   prevalence <- data.frame( c( phenotype_analysis(update8forR$VI)$percent,
                                phenotype_analysis(update8forR$MT)$percent,
@@ -127,6 +173,22 @@ prevalence_symptons_top <- function(update8forR){
   prevalence <- prevalence %>% arrange(desc(prevalence$Percent))
   prevalence
 }
+
+# Function: prevalence_statistics_chisq_global
+# 
+# Description: This function performs a chi-square test of significance to determine if there are significant 
+# differences in the prevalence of symptoms between them. It constructs a contingency table 
+# `prevalence_table` containing the counts of patients with and without each kind of symptoms. Then, it 
+# conducts a chi-square test using the contingency table to assess the significance of differences in symptom 
+# prevalence. The function returns the result of the chi-square test and the associated p-value.
+# 
+# Args:
+#   update8forR: A list or data frame containing information about different phenotypes, each identified by a 
+#                specific key.
+# 
+# Returns:
+#   result: A list containing the result of the chi-square test and the associated p-value.
+# 
 
 prevalence_statistics_chisq_global <- function(update8forR){
   ## test of significance
@@ -169,6 +231,14 @@ prevalence_statistics_chisq_global <- function(update8forR){
   chisq.test(prevalence_table)$p.value
 }
 
+# Function: prevalence_statistics_chisq_top
+# Description: This function performs a chi-square test of significance for the top 5 prevalent symptoms.
+# Input:
+#   - update8forR: A dataframe containing binary data indicating the presence (1) or absence (0) of symptoms for each patient.
+# Output:
+#   - p-value: A numeric value representing the result of the chi-square test.
+# Details: This function calculates the prevalence of the top 5 symptoms and performs a chi-square test of significance based on the presence or absence of these symptoms.
+
 prevalence_statistics_chisq_top <- function(update8forR){
   ## test of significance
   prevalence_table = matrix(c(
@@ -188,6 +258,16 @@ prevalence_statistics_chisq_top <- function(update8forR){
   chisq.test(prevalence_table)$p.value
 }
 
+# Function: plot_syndromic_score
+# Description: This function generates a bar plot to visualize the distribution of syndromic scores.
+# Input:
+#   - df: A dataframe containing the syndromic scores.
+#   - x_title: A character string specifying the title for the x-axis.
+# Output:
+#   - A bar plot visualizing the distribution of syndromic scores.
+# Details: This function creates a bar plot using ggplot2 to display the distribution of syndromic scores. 
+#          It adds a dashed vertical line at the mean of the syndromic scores for reference.
+
 plot_syndromic_score <- function(df,x_title){
   ggplot(df, aes(x= SS))+
     geom_bar()+
@@ -202,6 +282,17 @@ plot_syndromic_score <- function(df,x_title){
     theme()
 }
 
+# Function: plot_syndromic_score_box
+# Description: This function generates a box plot to visualize the distribution of syndromic scores across different groups.
+# Input:
+#   - df: A dataframe containing syndromic scores and grouping variable.
+#   - x_var: A character string specifying the grouping variable.
+#   - x_title: A character string specifying the title for the x-axis.
+# Output:
+#   - A box plot visualizing the distribution of syndromic scores across different groups.
+# Details: This function creates a box plot using ggplot2 to display the distribution of syndromic scores 
+#          across different groups specified by the x_var variable. It also includes jittered points for better visualization.
+
 plot_syndromic_score_box <- function(df, x_var, x_title = "All patients n=227"){
   ggplot(df, aes(x= x_var, y=SS))+
     geom_boxplot(aes(fill = x_var, alpha = 0.1), outlier.shape = NA)+
@@ -215,6 +306,16 @@ plot_syndromic_score_box <- function(df, x_var, x_title = "All patients n=227"){
     theme_bw() +
     theme(legend.position = "none")
 }
+
+# Function: plot_prevalence
+# Description: This function generates a bar plot to visualize the prevalence of ALMS symptoms based on the specified mode of analysis.
+# Input:
+#   - update8forR: A list containing data frames of ALMS symptoms.
+#   - mode_analysis: A character string specifying the mode of analysis ("global" or "top").
+# Output:
+#   - A bar plot visualizing the prevalence of ALMS symptoms.
+# Details: This function first calculates the prevalence of ALMS symptoms and performs a test of significance based on the specified mode of analysis. 
+#          It then generates a bar plot displaying the prevalence of symptoms along with the p-value from the chi-squared test.
 
 plot_prevalence <- function(update8forR, mode_analysis){
   
