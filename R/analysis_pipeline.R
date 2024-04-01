@@ -5,7 +5,7 @@
 #output:
 #---
   
-libraries <- c('kableExtra','ggpubr','cowplot','rstatix','readxl', 'tidyverse')
+libraries <- c('gridGraphics','kableExtra','ggpubr','cowplot','rstatix','readxl', 'tidyverse')
 lapply(libraries,library, character.only = TRUE)
 
 Curated_ALMS1_DB <- as.data.frame(read_xlsx("./data/Curated_ALMS1_DB.xlsx",
@@ -17,13 +17,13 @@ colnames(ALMS1_cohort)[37] <- "SS"
 
 ALMS1_cohort <- ALMS1_cohort %>% mutate(group = as.factor(ifelse(LT < 9, 1,ifelse(LT >= 9 & LT < 14,2,3))))
 
-phenotypes <- c("VI","MT","HL","HRT","LIV","REN","PUL","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
-
 ####Functions####
 
-source('./src/main/utils.R')
+source('R/utils.R')
 
 ####Analysis####
+
+phenotypes <- c("VI","MT","HL","HRT","LIV","REN","PUL","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
 
 ###Summary###
 
@@ -408,7 +408,8 @@ Phenotypes_sex_groups <- data.frame( "Prevalence"=c(phenotype_analysis(group_F$V
                                  "group" =as.factor(c(rep("F",9),rep("M",9)))
 ) 
 
-Phenotypes_sex_groups$Symptom <- factor(Phenotypes_groups$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+
+Phenotypes_sex_groups$Symptom <- factor(Phenotypes_sex_groups$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
 
 #Plot prevalence of mains phenotypes features in sex groups (F,M) using beta-distributions
@@ -437,7 +438,7 @@ Phenotypes_sex_groups_qvalues <- data.frame( "Prevalence"=c(unlist(phenotype_ana
                                          "group" =as.factor(c(rep("F",27),rep("M",27)))
 ) 
 
-Phenotypes_sex_groups_qvalues$Symptom <- factor(Phenotypes_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
+Phenotypes_sex_groups_qvalues$Symptom <- factor(Phenotypes_sex_groups_qvalues$Symptom, levels=c("VI","MT","HL","HRT","LIV","REN","MEND","PUL","REP"))
 
 df.summary <- Phenotypes_sex_groups_qvalues %>%
   group_by(group, Symptom) %>%

@@ -1,3 +1,14 @@
+# This function, summary_analysis(), calculates summary statistics from a given subset of data.
+# It computes various metrics including:
+# - Number of patients in the subset.
+# - Sex information availability and the distribution of male and female patients.
+# - Age information availability and the distribution of patients across different age groups.
+# - Mutation type availability and the distribution of different mutation types.
+# The function returns a data frame with the computed summary statistics.
+
+phenotypes <- c("VI","MT","HL","HRT","LIV","REN","PUL","SHS","REP","TYD","MEND","ABFING","INT","SCO","NER","ALO")
+
+
 summary_analysis <- function(subset_x) {
   
   # number of patients
