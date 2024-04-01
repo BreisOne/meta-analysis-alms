@@ -68,9 +68,9 @@ To replicate the analysis or explore the data further, follow these steps:
 
 ## File Structure
 
-- `src/main/analysis_pipeline.R`: Contains the R code for conducting the analysis and generating the figures.
-- `src/main/utils.R`: Contains auxiliary functions for the analysis.
-- `src/test/`: Directory for test scripts.
+- `R/analysis_pipeline.R`: Contains the R code for conducting the analysis and generating the figures.
+- `R/utils.R`: Contains auxiliary functions for the analysis.
+- `tests/`: Directory for test scripts.
 - `data/`: Directory containing the datasets used in the analysis.
 - `results/`: Directory containing the results of the analysis.
   - `figures/`: Directory for generated figures.
