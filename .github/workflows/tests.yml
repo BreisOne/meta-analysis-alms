@@ -20,5 +20,6 @@ jobs:
 
       - name: Run tests
         run: |
+          library(devtools)
           devtools::test()
         shell: Rscript {0}
