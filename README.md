@@ -1,3 +1,8 @@
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+
+![tests](https://github.com/BreisOne/meta-analysis_ALMS/actions/workflows/tests.yml/badge.svg)
+
+
 # Alström Syndrome Genotype-Phenotype Meta-Analysis
 
 This repository contains the code and data for a genotype-phenotype meta-analysis focusing on Alström syndrome, a rare ciliopathy disorder.
