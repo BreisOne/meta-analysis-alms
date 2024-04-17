@@ -19,7 +19,9 @@ jobs:
         run: |
           install.packages(c('remotes', 'testthat', 'devtools', 'gridGraphics', 'kableExtra', 'ggpubr', 'cowplot', 'rstatix', 'readxl', 'tidyverse'))
           remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
 
       - name: Run tests
         run: |
           devtools::test()
+        shell: Rscript {0}
