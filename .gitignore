@@ -2,6 +2,10 @@
 .Rhistory
 .Rapp.history
 
+#IDE folders
+.vscode/
+.idea/
+
 # Session Data files
 .RData
 .RDataTmp
@@ -9,7 +13,6 @@
 
 # User-specific files
 .Ruserdata
-.Rprofile
 
 # Example code in package build process
 *-Ex.R

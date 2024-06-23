@@ -5,8 +5,9 @@
 #output:
 #---
   
-libraries <- c('gridGraphics','kableExtra','ggpubr','cowplot','rstatix','readxl', 'tidyverse')
-lapply(libraries,library, character.only = TRUE)
+general_libraries <- c('gridGraphics','kableExtra','ggpubr','cowplot','rstatix','readxl', 'tidyverse')
+lapply(general_libraries, install.packages, character.only = TRUE)
+lapply(general_libraries,library, character.only = TRUE)
 
 Curated_ALMS1_DB <- as.data.frame(read_xlsx("./data/Curated_ALMS1_DB.xlsx",
                                     sheet = "Genotype-Phenotype"))
