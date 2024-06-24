@@ -15,6 +15,13 @@ jobs:
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
 
+      - name: Install devtools
+        run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          utils::install.packages("devtools")
+          library(devtools)
+        shell: Rscript {0}
+
       - name: Set CRAN mirror and install renv
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
@@ -23,15 +30,8 @@ jobs:
 
       - name: Install dependencies
         uses: r-lib/actions/setup-renv@v2
-      
-      - name: Install devtools
-        run: |
-          options(repos = c(CRAN = "https://cloud.r-project.org"))
-          utils::install.packages("devtools")
-        shell: Rscript {0}
 
       - name: Run tests
         run: |
-          library(devtools)
           devtools::test()
         shell: Rscript {0}
