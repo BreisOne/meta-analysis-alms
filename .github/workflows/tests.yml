@@ -26,7 +26,8 @@ jobs:
       
       - name: Install devtools
         run: |
-          install.packages("devtools", repos = "https://cloud.r-project.org")
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          utils::install.packages("devtools")
         shell: Rscript {0}
 
       - name: Run tests
@@ -34,4 +35,3 @@ jobs:
           library(devtools)
           devtools::test()
         shell: Rscript {0}
-
