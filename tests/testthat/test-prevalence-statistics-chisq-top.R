@@ -1,3 +1,5 @@
+library(testthat)
+source("../../R/utils.R")
 
 test_that("prevalence_statistics_chisq_top returns only a numeric p-value", {
   # Create sample data for testing
@@ -13,5 +15,5 @@ test_that("prevalence_statistics_chisq_top returns only a numeric p-value", {
   result <- prevalence_statistics_chisq_top(update8forR)
   
   # Check if the result is a numeric value
-  expect_is(result, "numeric")
+  expect_type(result, "double")
 })

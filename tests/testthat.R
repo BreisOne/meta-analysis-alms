@@ -9,4 +9,4 @@
 library(testthat)
 library(meta-analysis_ALMS)
 
-test_check("tests")
+test_check("meta-analysis_ALMS")

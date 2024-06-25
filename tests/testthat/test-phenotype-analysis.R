@@ -1,3 +1,6 @@
+library(testthat)
+source("../../R/utils.R")
+
 # Define a test case for phenotype_analysis function
 test_that("phenotype_analysis calculates statistics correctly", {
   # Create sample data frame for testing
@@ -10,8 +13,8 @@ test_that("phenotype_analysis calculates statistics correctly", {
   
   
   # Check if the result is a data frame
-  expect_is(result_VI, "data.frame")
-  expect_is(result_LIV, "data.frame")
+  expect_s3_class(result_VI, "data.frame")
+  expect_s3_class(result_LIV, "data.frame")
   
   # Check if the result has expected column names
   expect_equal(names(result_VI), c("count", "yes", "no", "na", "percent", "upper", "lower"))

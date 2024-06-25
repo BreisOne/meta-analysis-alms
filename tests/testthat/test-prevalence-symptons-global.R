@@ -1,3 +1,7 @@
+library(testthat)
+library(dplyr)
+source("../../R/utils.R")
+
 # Create sample data for testing
 update8forR <- update8forR <- data.frame(
   VI = c(1, 0, 1, 1, 1, 0),
@@ -24,7 +28,7 @@ test_that("prevalence_symptons_global calculates prevalence correctly", {
   result <- prevalence_symptons_global(update8forR)
   
   # Check if the result is a data frame
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   
   # Check if the result has expected number of rows (phenotypes)
   expect_equal(nrow(result), 16)

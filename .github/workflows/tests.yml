@@ -31,12 +31,8 @@ jobs:
         run: renv::restore()
         shell: Rscript {0}
 
-      - name: Install devtools
-        run: |
-          renv::install("devtools")
-        shell: Rscript {0}
-
       - name: Run tests
         run: |
-          devtools::test()
+          library(testthat)
+          test_dir("tests/testthat")
         shell: Rscript {0}

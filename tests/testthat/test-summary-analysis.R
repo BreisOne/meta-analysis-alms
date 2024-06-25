@@ -1,3 +1,5 @@
+library(testthat)
+source("../../R/utils.R")
 
 # Test for summary_analysis function
 test_that("summary_analysis function computes summary statistics correctly", {
@@ -13,7 +15,7 @@ test_that("summary_analysis function computes summary statistics correctly", {
   result <- summary_analysis(subset_x)
   
   # Check if the result is a data frame
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   
   # Check if the number of patients is computed correctly
   expect_equal(result[1, "Number of patients"], 8)

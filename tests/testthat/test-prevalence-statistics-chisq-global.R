@@ -1,3 +1,5 @@
+library(testthat)
+source("../../R/utils.R")
 
 # Define a test case for prevalence_statistics_chisq_global function
 test_that("prevalence_statistics_chisq_global performs chi-square test correctly", {
@@ -24,6 +26,6 @@ test_that("prevalence_statistics_chisq_global performs chi-square test correctly
   result <- prevalence_statistics_chisq_global(update8forR)
   
   # Check if the result is a list
-  expect_is(result, "numeric")
+  expect_type(result, "double")
   
 })

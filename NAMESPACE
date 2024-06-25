@@ -1,1 +1,10 @@
 exportPattern("^[[:alpha:]]+")
+
+export(plot_prevalence)
+export(plot_syndromic_score)
+export(plot_syndromic_score_box)
+export(prevalence_statistics_chisq_global)
+export(prevalence_statistics_chisq_top)
+export(prevalence_symptons_global)
+export(prevalence_symptons_top)
+export(summary_analysis)

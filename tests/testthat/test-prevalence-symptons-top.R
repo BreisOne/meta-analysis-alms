@@ -1,3 +1,7 @@
+library(testthat)
+library(dplyr)
+source("../../R/utils.R")
+
 # Define a test case for prevalence_symptons_top function
 test_that("prevalence_symptons_top calculates prevalence correctly for top five phenotypes", {
   # Create sample data for testing
@@ -24,7 +28,7 @@ test_that("prevalence_symptons_top calculates prevalence correctly for top five 
   result <- prevalence_symptons_top(update8forR)
   
   # Check if the result is a data frame
-  expect_is(result, "data.frame")
+  expect_s3_class(result, "data.frame")
   
   # Check if the result has expected number of rows (top five phenotypes)
   expect_equal(nrow(result), 5)
