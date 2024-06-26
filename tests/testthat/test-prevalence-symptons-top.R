@@ -1,7 +1,3 @@
-library(testthat)
-library(dplyr)
-source("../../R/utils.R")
-
 # Define a test case for prevalence_symptons_top function
 test_that("prevalence_symptons_top calculates prevalence correctly for top five phenotypes", {
   # Create sample data for testing

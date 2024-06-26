@@ -1,6 +1,3 @@
-library(testthat)
-source("../../R/utils.R")
-
 # Define a test case for prevalence_statistics_chisq_global function
 test_that("prevalence_statistics_chisq_global performs chi-square test correctly", {
   # Create sample data for testing

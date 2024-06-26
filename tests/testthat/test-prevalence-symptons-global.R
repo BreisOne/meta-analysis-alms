@@ -1,7 +1,3 @@
-library(testthat)
-library(dplyr)
-source("../../R/utils.R")
-
 # Create sample data for testing
 update8forR <- update8forR <- data.frame(
   VI = c(1, 0, 1, 1, 1, 0),

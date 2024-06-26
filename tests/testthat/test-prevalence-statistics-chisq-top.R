@@ -1,6 +1,3 @@
-library(testthat)
-source("../../R/utils.R")
-
 test_that("prevalence_statistics_chisq_top returns only a numeric p-value", {
   # Create sample data for testing
   update8forR <- data.frame(

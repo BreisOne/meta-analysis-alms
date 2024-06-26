@@ -1,7 +1,3 @@
-library(testthat)
-library(dplyr)
-source("../../R/utils.R")
-
 test_that("plot_prevalence generates a plot object", {
   # Create sample data for testing
   update8forR <- list(

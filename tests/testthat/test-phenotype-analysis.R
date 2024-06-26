@@ -1,6 +1,3 @@
-library(testthat)
-source("../../R/utils.R")
-
 # Define a test case for phenotype_analysis function
 test_that("phenotype_analysis calculates statistics correctly", {
   # Create sample data frame for testing

@@ -1,7 +1,3 @@
-library(ggplot2)
-library(testthat)
-source("../../R/utils.R")
-
 test_that("plot_syndromic_score generates a plot object", {
   # Create sample data for testing
   df <- data.frame(SS = rnorm(100))

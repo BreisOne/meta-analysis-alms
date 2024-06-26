@@ -1,6 +1,3 @@
-library(testthat)
-source("../../R/utils.R")
-
 # Test for summary_analysis function
 test_that("summary_analysis function computes summary statistics correctly", {
   # Create a sample data frame for testing
